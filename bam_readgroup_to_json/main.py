@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import json
 import logging
 import os
 import sys
@@ -11,6 +12,28 @@ import sqlalchemy
 from cdis_pipe_utils import pipe_util
 from cdis_pipe_utils import df_util
 from cdis_pipe_utils import time_util
+
+def check_readgroup(readgroup_dict, logger):
+    if not 'CN' in readgroup_dict:
+        logger.debug('"CN" is missing from readgroup: %s' % readgroup_dict)
+        sys.exit(1)
+    if not 'ID' in readgroup_dict:
+        logger.debug('"ID" is missing from readgroup: %s' % readgroup_dict)
+        sys.exit(1)
+    if not 'LB' in readgroup_dict:
+        logger.debug('"LB" is missing from readgroup: %s' % readgroup_dict)
+        sys.exit(1)
+    if not 'PL' in readgroup_dict:
+        logger.debug('"PL" is missing from readgroup: %s' % readgroup_dict)
+        sys.exit(1)
+    if not 'PU' in readgroup_dict:
+        logger.debug('"PU" is missing from readgroup: %s' % readgroup_dict)
+        sys.exit(1)
+    if not 'SM' in readgroup_dict:
+        logger.debug('"SM" is missing from readgroup: %s' % readgroup_dict)
+        sys.exit(1)
+    # if not 'DT' in readgroup_dict
+    return
 
 def extract_readgroup_json(bam_path, engine, logger):
     step_dir = os.getcwd()
@@ -29,6 +52,7 @@ def extract_readgroup_json(bam_path, engine, logger):
             sys.exit(1)
         else:
             readgroup_dict = readgroup_dict_list[0]
+            check_readgroup(readgroup_dict, logger)
             with open(readgroup_json_file, 'w') as f:
                 json.dump(readgroup_dict, f, ensure_ascii=False)
             pipe_util.create_already_step(step_dir, bam_name + '.json', logger)
@@ -48,7 +72,7 @@ def main():
 
     # Required flags.
     parser.add_argument('-u', '--uuid',
-                        required = True,
+                         required = True,
                         help = 'analysis_id string',
     )
 
