@@ -39,23 +39,23 @@ def extract_readgroup_json(bam_path, engine, logger):
     step_dir = os.getcwd()
     bam_file = os.path.basename(bam_path)
     bam_name, bam_ext = os.path.splitext(bam_file)
-    readgroup_json_file = bam_name + '.json'
-    if pipe_util.already_step(step_dir, bam_name + '.json', logger):
+    if pipe_util.already_step(step_dir, bam_name + 'json_extract', logger):
         logger.info('already written readgroup json: %s' % bam_name)
     else:
         samfile = pysam.AlignmentFile(bam_path, 'rb')
         samfile_header = samfile.header
         readgroup_dict_list = samfile_header['RG']
-        if len(readgroup_dict_list) != 1:
-            logger.debug('There is not exactly readgroup in BAM: %s' % bam_name)
+        if len(readgroup_dict_list) < 1:
+            logger.debug('There are no readgroups in BAM: %s' % bam_name)
             logger.debug('\treadgroup: %s' % readgroup_dict_list)
             sys.exit(1)
         else:
-            readgroup_dict = readgroup_dict_list[0]
-            check_readgroup(readgroup_dict, logger)
-            with open(readgroup_json_file, 'w') as f:
-                json.dump(readgroup_dict, f, ensure_ascii=False)
-            pipe_util.create_already_step(step_dir, bam_name + '.json', logger)
+            for readgroup_dict in readgroup_dict_list:
+                check_readgroup(readgroup_dict, logger)
+                readgroup_json_file = readgroup_dict['ID'] + '.json'
+                with open(readgroup_json_file, 'w') as f:
+                    json.dump(readgroup_dict, f, ensure_ascii=False)
+            pipe_util.create_already_step(step_dir, bam_name + 'json_extract', logger)
     return readgroup_json_file
 
 def main():
