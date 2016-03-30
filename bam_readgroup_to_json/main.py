@@ -56,7 +56,7 @@ def extract_readgroup_json(bam_path, engine, logger):
                 with open(readgroup_json_file, 'w') as f:
                     json.dump(readgroup_dict, f, ensure_ascii=False)
             pipe_util.create_already_step(step_dir, bam_name + 'json_extract', logger)
-    return readgroup_json_file
+    return
 
 def main():
     parser = argparse.ArgumentParser('bwa mem mapping')
