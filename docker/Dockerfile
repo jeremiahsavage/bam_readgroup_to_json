@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --force-yes \
 
 USER ubuntu
 
-ENV bam_readgroup_to_json 0.1
+ENV bam_readgroup_to_json 0.3
 
 RUN /bin/bash -c "source ${HOME}/.virtualenvs/p3/bin/activate \
     && pip install bam_readgroup_to_json"
