@@ -51,8 +51,10 @@ def extract_readgroup_json(bam_path, engine, logger):
             sys.exit(1)
         else:
             for readgroup_dict in readgroup_dict_list:
+                logger.info('readgroup_dict=%s' % readgroup_dict)
                 check_readgroup(readgroup_dict, logger)
                 readgroup_json_file = readgroup_dict['ID'] + '.json'
+                logger.info('readgroup_json_file=%s\n' % readgroup_json_file)
                 with open(readgroup_json_file, 'w') as f:
                     json.dump(readgroup_dict, f, ensure_ascii=False)
             pipe_util.create_already_step(step_dir, bam_name + 'json_extract', logger)
