@@ -15,22 +15,22 @@ from cdis_pipe_utils import time_util
 
 def check_readgroup(readgroup_dict, logger):
     if not 'CN' in readgroup_dict:
-        logger.debug('"CN" is missing from readgroup: %s' % readgroup_dict)
+        logger.info('"CN" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
     if not 'ID' in readgroup_dict:
-        logger.debug('"ID" is missing from readgroup: %s' % readgroup_dict)
+        logger.info('"ID" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
     if not 'LB' in readgroup_dict:
-        logger.debug('"LB" is missing from readgroup: %s' % readgroup_dict)
+        logger.info('"LB" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
     if not 'PL' in readgroup_dict:
-        logger.debug('"PL" is missing from readgroup: %s' % readgroup_dict)
+        logger.info('"PL" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
     if not 'PU' in readgroup_dict:
-        logger.debug('"PU" is missing from readgroup: %s' % readgroup_dict)
+        logger.info('"PU" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
     if not 'SM' in readgroup_dict:
-        logger.debug('"SM" is missing from readgroup: %s' % readgroup_dict)
+        logger.info('"SM" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
     # if not 'DT' in readgroup_dict
     return
@@ -52,7 +52,7 @@ def extract_readgroup_json(bam_path, engine, logger):
         else:
             for readgroup_dict in readgroup_dict_list:
                 logger.info('readgroup_dict=%s' % readgroup_dict)
-                check_readgroup(readgroup_dict, logger)
+                #check_readgroup(readgroup_dict, logger)
                 readgroup_json_file = readgroup_dict['ID'] + '.json'
                 logger.info('readgroup_json_file=%s\n' % readgroup_json_file)
                 with open(readgroup_json_file, 'w') as f:
