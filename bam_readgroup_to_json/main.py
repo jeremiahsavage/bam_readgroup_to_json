@@ -77,15 +77,6 @@ def main():
                          required = True,
                         help = 'analysis_id string',
     )
-
-    # Optional db flags
-    parser.add_argument('--db_cred_s3url',
-                        required = False
-    )
-    parser.add_argument('--s3cfg_path',
-                        required = False
-    )
-
     
     # Tool flags
     parser.add_argument('-b', '--bam_path',
@@ -96,24 +87,13 @@ def main():
     args = parser.parse_args()
     uuid = args.uuid
     bam_path = args.bam_path
-
-    if args.db_cred_s3url:
-        db_cred_s3url = args.db_cred_s3url
-    else:
-        db_cred_s3url = None
-    if args.s3cfg_path:
-        s3cfg_path = args.s3cfg_path
     
     tool_name = 'bam_readgroup_to_json'
     logger = pipe_util.setup_logging(tool_name, args, uuid)
 
-    if db_cred_s3url is not None: #db server case
-        conn_dict = pipe_util.get_connect_dict(db_cred_s3url, s3cfg_path, logger)
-        engine = sqlalchemy.create_engine(sqlalchemy.engine.url.URL(**conn_dict))
-    else: # local sqlite case
-        sqlite_name = uuid + '.db'
-        engine_path = 'sqlite:///' + sqlite_name
-        engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
+    sqlite_name = uuid + '.db'
+    engine_path = 'sqlite:///' + sqlite_name
+    engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
 
     hostname = os.uname()[1]
     logger.info('hostname=%s' % hostname)
