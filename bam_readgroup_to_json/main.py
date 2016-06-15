@@ -77,8 +77,6 @@ def main():
                          required = True,
                         help = 'analysis_id string',
     )
-    
-    # Tool flags
     parser.add_argument('-b', '--bam_path',
                         required = True,
                         help = 'BAM file.'
