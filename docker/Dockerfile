@@ -1,8 +1,17 @@
-FROM quay.io/jeremiahsavage/cdis_base
+FROM ubuntu:xenial-20160713
 
-USER ubuntu
+MAINTAINER Jeremiah H. Savage <jeremiahsavage@gmail.com>
 
-ENV bam_readgroup_to_json 0.8
+USER root
 
-RUN /bin/bash -c "source ${HOME}/.virtualenvs/p3/bin/activate \
-    && pip install bam_readgroup_to_json"
+RUN apt-get update && apt-get install -y \
+    python3-pip \
+    python3-pandas \
+    python3-sqlalchemy
+
+RUN apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ENV bam_readgroup_to_json 0.9
+
+RUN pip3 install bam_readgroup_to_json

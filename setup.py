@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 setup(name = 'bam_readgroup_to_json',
       author = 'Jeremiah H. Savage',
       author_email = 'jeremiahsavage@gmail.com',
-      version = 0.8,
+      version = 0.9,
       description = 'convert each readgroup id to a json file from a BAM',
       url = 'https://github.com/jeremiahsavage/bam_readgroup_to_json/',
       license = 'Apache 2.0',
@@ -14,8 +14,7 @@ setup(name = 'bam_readgroup_to_json',
           'cython',
           'pandas',
           'pysam',
-          'sqlalchemy',
-          'cdis_pipe_utils'
+          'sqlalchemy'
       ],
       classifiers = [
           'Development Status :: 3 - Alpha',
@@ -25,4 +24,7 @@ setup(name = 'bam_readgroup_to_json',
           'Programming Language :: Python :: 2',
           'Programming Language :: Python :: 3',
       ],
+      entry_points={
+          'console_scripts': ['bam_readgroup_to_json=bam_readgroup_to_json.__main__:main']
+      }
 )
