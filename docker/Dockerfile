@@ -7,11 +7,13 @@ USER root
 RUN apt-get update && apt-get install -y \
     python3-pandas \
     python3-pip \
-    python3-sqlalchemy
+    python3-sqlalchemy \
+    zlib1g-dev
 
 RUN apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ENV bam_readgroup_to_json 0.9
 
+RUN pip3 install cython
 RUN pip3 install bam_readgroup_to_json
