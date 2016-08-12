@@ -4,16 +4,13 @@ MAINTAINER Jeremiah H. Savage <jeremiahsavage@gmail.com>
 
 USER root
 
-RUN apt-get update && apt-get install -y \
-    python3-pandas \
-    python3-pip \
-    python3-sqlalchemy \
-    zlib1g-dev
-
-RUN apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-ENV bam_readgroup_to_json 0.9
-
-RUN pip3 install cython
-RUN pip3 install bam_readgroup_to_json
+RUN apt-get update \
+    && apt-get install -y \
+       python3-pandas \
+       python3-pip \
+       python3-sqlalchemy \
+       zlib1g-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && pip3 install cython \
+    && pip3 install bam_readgroup_to_json
