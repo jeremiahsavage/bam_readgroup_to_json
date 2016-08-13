@@ -7,7 +7,6 @@ import os
 import sys
 
 import pysam
-import sqlalchemy
 
 def check_readgroup(readgroup_dict, logger):
     if not 'CN' in readgroup_dict:
@@ -32,7 +31,7 @@ def check_readgroup(readgroup_dict, logger):
     return
 
 
-def extract_readgroup_json(bam_path, engine, logger):
+def extract_readgroup_json(bam_path, logger):
     step_dir = os.getcwd()
     bam_file = os.path.basename(bam_path)
     bam_name, bam_ext = os.path.splitext(bam_file)
@@ -62,7 +61,6 @@ def setup_logging(args, uuid):
         format='%(asctime)s %(levelname)s %(message)s',
         datefmt='%Y-%m-%d_%H:%M:%S_%Z',
     )
-    logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
     logger = logging.getLogger(__name__)
     return logger
 
@@ -80,26 +78,17 @@ def main():
     parser.set_defaults(level = logging.INFO)
 
     # Required flags.
-    parser.add_argument('-u', '--uuid',
-                         required = True,
-                        help = 'analysis_id string',
-    )
     parser.add_argument('-b', '--bam_path',
                         required = True,
                         help = 'BAM file.'
     )
 
     args = parser.parse_args()
-    uuid = args.uuid
     bam_path = args.bam_path
     
     logger = setup_logging(args, uuid)
 
-    sqlite_name = uuid + '.db'
-    engine_path = 'sqlite:///' + sqlite_name
-    engine = sqlalchemy.create_engine(engine_path, isolation_level='SERIALIZABLE')
-
-    extract_readgroup_json(bam_path, engine, logger)
+    extract_readgroup_json(bam_path, logger)
     return
 
 if __name__ == '__main__':
