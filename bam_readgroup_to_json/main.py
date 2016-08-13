@@ -53,9 +53,9 @@ def extract_readgroup_json(bam_path, logger):
     return
 
 
-def setup_logging(args, uuid):
+def setup_logging(args):
     logging.basicConfig(
-        filename=os.path.join(uuid + '.log'),
+        filename=os.path.join('output.log'),
         level=args.level,
         filemode='w',
         format='%(asctime)s %(levelname)s %(message)s',
@@ -86,7 +86,7 @@ def main():
     args = parser.parse_args()
     bam_path = args.bam_path
     
-    logger = setup_logging(args, uuid)
+    logger = setup_logging(args)
 
     extract_readgroup_json(bam_path, logger)
     return
