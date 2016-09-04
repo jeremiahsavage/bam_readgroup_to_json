@@ -73,7 +73,7 @@ def legacy_extract_readgroup_json(bam_path, logger):
     bam_file = os.path.basename(bam_path)
     bam_name, bam_ext = os.path.splitext(bam_file)
     samfile = pysam.AlignmentFile(bam_path, 'rb')
-    samfile_header = samfile.header
+    samfile_header = samfile.text
     samfile_header_list = samfile_header.split('\n')
     header_rg_list = [ header_line for header_line in header_list if header_line.startswith('@RG') ]
     readgroup_dict_list = header_rg_list_to_rg_dicts(header_rg_list)
