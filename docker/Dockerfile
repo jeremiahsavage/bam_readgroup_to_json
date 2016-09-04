@@ -2,7 +2,7 @@ FROM ubuntu:xenial-20160809
 
 MAINTAINER Jeremiah H. Savage <jeremiahsavage@gmail.com>
 
-ENV version 0.14
+ENV version 0.15
 
 RUN apt-get update \
     && apt-get install -y \
