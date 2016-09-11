@@ -62,7 +62,7 @@ def header_rg_list_to_rg_dicts(header_rg_list):
             a_key = key_value_split[0]
             a_value = key_value_split[1]
             readgroup[a_key] = a_value
-        if 'PL' not in keys_values:
+        if 'PL' not in readgroup.keys():
             readgroup['PL'] = 'ILLUMINA'
         readgroups_list.append(readgroup)
     return readgroups_list
