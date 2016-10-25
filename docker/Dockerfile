@@ -1,4 +1,4 @@
-FROM ubuntu:xenial-20160809
+FROM ubuntu:xenial-20161010
 
 MAINTAINER Jeremiah H. Savage <jeremiahsavage@gmail.com>
 
@@ -11,6 +11,6 @@ RUN apt-get update \
        python3-sqlalchemy \
        zlib1g-dev \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     && pip3 install cython \
-    && pip3 install bam_readgroup_to_json
+    && pip3 install bam_readgroup_to_json \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
