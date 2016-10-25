@@ -13,6 +13,8 @@ RUN echo 'Acquire::http::Proxy "http://cloud-proxy:3128";' >> /etc/apt/apt.conf.
        python3-sqlalchemy \
        zlib1g-dev \
     && apt-get clean \
+    && http_proxy=http://cloud-proxy:3128 \
+    && https_proxy=http://cloud-proxy:3128 \
     && pip3 install cython \
     && pip3 install bam_readgroup_to_json \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
