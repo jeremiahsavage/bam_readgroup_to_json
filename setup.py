@@ -5,15 +5,14 @@ from setuptools import setup, find_packages
 setup(name = 'bam_readgroup_to_json',
       author = 'Jeremiah H. Savage',
       author_email = 'jeremiahsavage@gmail.com',
-      version = 0.18,
+      version = 0.19,
       description = 'convert each readgroup id to a json file from a BAM',
       url = 'https://github.com/jeremiahsavage/bam_readgroup_to_json/',
       license = 'Apache 2.0',
       packages = find_packages(),
       install_requires = [
-          'cython',
           'pandas',
-          'pysam==0.9.1.3',
+          'pysam',
           'sqlalchemy'
       ],
       classifiers = [
