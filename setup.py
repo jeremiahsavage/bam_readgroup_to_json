@@ -13,7 +13,7 @@ setup(name = 'bam_readgroup_to_json',
       install_requires = [
           'cython',
           'pandas',
-          'pysam',
+          'pysam==0.9.1.3',
           'sqlalchemy'
       ],
       classifiers = [
