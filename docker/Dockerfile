@@ -13,4 +13,4 @@ RUN apt-get update \
     && apt-get clean \
     && pip3 install cython \
     && pip3 install bam_readgroup_to_json \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.cache
