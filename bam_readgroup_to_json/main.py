@@ -53,7 +53,7 @@ def extract_readgroup_json(bam_path, logger):
     step_dir = os.getcwd()
     bam_file = os.path.basename(bam_path)
     bam_name, bam_ext = os.path.splitext(bam_file)
-    samfile = pysam.AlignmentFile(bam_path, 'rb')
+    samfile = pysam.AlignmentFile(bam_path, 'rb', check_sq=False)
     samfile_header = samfile.header
     readgroup_dict_list = samfile_header['RG']
     if len(readgroup_dict_list) < 1:
@@ -91,7 +91,7 @@ def legacy_extract_readgroup_json(bam_path, logger):
     step_dir = os.getcwd()
     bam_file = os.path.basename(bam_path)
     bam_name, bam_ext = os.path.splitext(bam_file)
-    samfile = pysam.AlignmentFile(bam_path, 'rb')
+    samfile = pysam.AlignmentFile(bam_path, 'rb', check_sq=False)
     samfile_header = samfile.text
     header_list = samfile_header.split('\n')
     header_rg_list = [ header_line for header_line in header_list if header_line.startswith('@RG') ]
