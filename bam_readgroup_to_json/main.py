@@ -103,7 +103,7 @@ def legacy_extract_readgroup_json(bam_path, logger):
     else:
         for readgroup_dict in readgroup_dict_list:
             logger.info('readgroup_dict=%s' % readgroup_dict)
-            legacy_check_readgroup(readgroup_dict, logger)
+            # legacy_check_readgroup(readgroup_dict, logger)
             readgroup_json_file = readgroup_dict['ID'] + '.json'
             logger.info('readgroup_json_file=%s\n' % readgroup_json_file)
             with open(readgroup_json_file, 'w') as f:
