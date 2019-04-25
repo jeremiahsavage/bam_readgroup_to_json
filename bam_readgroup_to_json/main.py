@@ -112,6 +112,7 @@ def legacy_extract_readgroup_json(bam_path, logger):
             logger.info('len(readgroup_dict_list={}'.format(len(readgroup_dict_list)))
             readgroup_dict = dict()
             readgroup_dict['ID'] = 'default'
+            readgroup_json_file = 'default.json'
             with open(readgroup_json_file, 'w') as f:
                 json.dump(readgroup_dict, f, ensure_ascii=False)            
     return
