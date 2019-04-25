@@ -96,10 +96,13 @@ def legacy_extract_readgroup_json(bam_path, logger):
     header_list = samfile_header.split('\n')
     header_rg_list = [ header_line for header_line in header_list if header_line.startswith('@RG') ]
     readgroup_dict_list = header_rg_list_to_rg_dicts(header_rg_list)
-    if len(readgroup_dict_list) < 1:
-        logger.debug('There are no readgroups in BAM: %s' % bam_name)
-        logger.debug('\treadgroup: %s' % readgroup_dict_list)
-        sys.exit(1)
+    if len(readgroup_dict_list) == 0:
+        logger.info('len(readgroup_dict_list={}'.format(len(readgroup_dict_list)))
+        readgroup_dict = dict()
+        readgroup_dict['ID'] = 'default'
+        readgroup_json_file = 'default.json'
+        with open(readgroup_json_file, 'w') as f:
+            json.dump(readgroup_dict, f, ensure_ascii=False)            
     else:
         for readgroup_dict in readgroup_dict_list:
             logger.info('readgroup_dict=%s' % readgroup_dict)
@@ -108,13 +111,6 @@ def legacy_extract_readgroup_json(bam_path, logger):
             logger.info('readgroup_json_file=%s\n' % readgroup_json_file)
             with open(readgroup_json_file, 'w') as f:
                 json.dump(readgroup_dict, f, ensure_ascii=False)
-        if len(readgroup_dict_list) == 0: # handle BAMs with no RG
-            logger.info('len(readgroup_dict_list={}'.format(len(readgroup_dict_list)))
-            readgroup_dict = dict()
-            readgroup_dict['ID'] = 'default'
-            readgroup_json_file = 'default.json'
-            with open(readgroup_json_file, 'w') as f:
-                json.dump(readgroup_dict, f, ensure_ascii=False)            
     return
 
 
