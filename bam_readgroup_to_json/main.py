@@ -108,6 +108,12 @@ def legacy_extract_readgroup_json(bam_path, logger):
             logger.info('readgroup_json_file=%s\n' % readgroup_json_file)
             with open(readgroup_json_file, 'w') as f:
                 json.dump(readgroup_dict, f, ensure_ascii=False)
+        if len(readgroup_dict_list) == 0: # handle BAMs with no RG
+            logger.info('len(readgroup_dict_list={}'.format(len(readgroup_dict_list)))
+            readgroup_dict = dict()
+            readgroup_dict['ID'] = 'default'
+            with open(readgroup_json_file, 'w') as f:
+                json.dump(readgroup_dict, f, ensure_ascii=False)            
     return
 
 
