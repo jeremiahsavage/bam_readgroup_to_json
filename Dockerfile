@@ -26,4 +26,5 @@ RUN apt-get update \
         liblzma-dev \
         make \
         zlib1g-dev \
+    && apt autoremove -y \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.cache
