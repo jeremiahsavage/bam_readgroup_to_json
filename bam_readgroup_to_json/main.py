@@ -65,6 +65,7 @@ def extract_readgroup_json(bam_path, logger):
             logger.info('readgroup_dict=%s' % readgroup_dict)
             check_readgroup(readgroup_dict, logger)
             readgroup_json_file = readgroup_dict['ID'] + '.json'
+            readgroup_json_file = readgroup_json_file.replace('+','')
             logger.info('readgroup_json_file=%s\n' % readgroup_json_file)
             with open(readgroup_json_file, 'w') as f:
                 json.dump(readgroup_dict, f, ensure_ascii=False)
@@ -108,6 +109,7 @@ def legacy_extract_readgroup_json(bam_path, logger):
             logger.info('readgroup_dict=%s' % readgroup_dict)
             # legacy_check_readgroup(readgroup_dict, logger)
             readgroup_json_file = readgroup_dict['ID'] + '.json'
+            readgroup_json_file = readgroup_json_file.replace('+','')
             logger.info('readgroup_json_file=%s\n' % readgroup_json_file)
             with open(readgroup_json_file, 'w') as f:
                 json.dump(readgroup_dict, f, ensure_ascii=False)
