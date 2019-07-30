@@ -7,6 +7,8 @@ ENV version 0.26
 RUN apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && apt-get install -y \
+        cython \
+        libbz2-dev \
         make \
         python3-pandas \
         python3-pip \
