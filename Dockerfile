@@ -9,6 +9,7 @@ RUN apt-get update \
     && apt-get install -y \
         cython \
         libbz2-dev \
+        liblzma-dev \
         make \
         python3-pandas \
         python3-pip \
