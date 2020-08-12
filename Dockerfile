@@ -15,12 +15,12 @@ RUN apt-get update \
         zlib1g \
         zlib1g-dev
 
-COPY .dist/ /opt
+COPY ./dist/ /opt
 
 WORKDIR /opt
 
-RUN make init-pip \
-  && ln -s /opt/bin/${BINARY} /bin/${BINARY}
+RUN make init-pip
+	# && ln -s /opt/bin/${BINARY} /usr/local/bin/${BINARY}
 
 RUN apt-get remove --purge -y \
         cython \
@@ -28,9 +28,9 @@ RUN apt-get remove --purge -y \
         liblzma-dev \
         make \
         zlib1g-dev \
-    && apt autoremove -y \
+    && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.cache
 
-ENTRYPOINT ["/bin/${BINARY}"]
+ENTRYPOINT ["bam_readgroup_to_json"]
 
 CMD ["--help"]
