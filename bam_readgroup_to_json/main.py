@@ -8,6 +8,7 @@ import sys
 
 import pysam
 
+
 def check_readgroup(readgroup_dict, logger):
     if not 'CN' in readgroup_dict:
         logger.info('"CN" is missing from readgroup: %s' % readgroup_dict)
@@ -30,6 +31,7 @@ def check_readgroup(readgroup_dict, logger):
     # if not 'DT' in readgroup_dict
     return
 
+
 def legacy_check_readgroup(readgroup_dict, logger):
     if not 'CN' in readgroup_dict:
         logger.info('"CN" is missing from readgroup: %s' % readgroup_dict)
@@ -49,6 +51,7 @@ def legacy_check_readgroup(readgroup_dict, logger):
     # if not 'DT' in readgroup_dict
     return
 
+
 def extract_readgroup_json(bam_path, logger):
     step_dir = os.getcwd()
     bam_file = os.path.basename(bam_path)
@@ -65,7 +68,7 @@ def extract_readgroup_json(bam_path, logger):
             logger.info('readgroup_dict=%s' % readgroup_dict)
             check_readgroup(readgroup_dict, logger)
             readgroup_json_file = readgroup_dict['ID'] + '.json'
-            readgroup_json_file = readgroup_json_file.replace('+','')
+            readgroup_json_file = readgroup_json_file.replace('+', '')
             logger.info('readgroup_json_file=%s\n' % readgroup_json_file)
             with open(readgroup_json_file, 'w') as f:
                 json.dump(readgroup_dict, f, ensure_ascii=False)
@@ -75,7 +78,9 @@ def extract_readgroup_json(bam_path, logger):
 def header_rg_list_to_rg_dicts(header_rg_list):
     readgroups_list = list()
     for rg_list in header_rg_list:
-        keys_values = rg_list.lstrip('@RG').lstrip('\t').lstrip('@SQ').lstrip('\t').split('\t')
+        keys_values = (
+            rg_list.lstrip('@RG').lstrip('\t').lstrip('@SQ').lstrip('\t').split('\t')
+        )
         readgroup = dict()
         for key_value in keys_values:
             key_value_split = key_value.split(':')
@@ -95,7 +100,9 @@ def legacy_extract_readgroup_json(bam_path, logger):
     samfile = pysam.AlignmentFile(bam_path, 'rb', check_sq=False)
     samfile_header = samfile.text
     header_list = samfile_header.split('\n')
-    header_rg_list = [ header_line for header_line in header_list if header_line.startswith('@RG') ]
+    header_rg_list = [
+        header_line for header_line in header_list if header_line.startswith('@RG')
+    ]
     readgroup_dict_list = header_rg_list_to_rg_dicts(header_rg_list)
     if len(readgroup_dict_list) == 0:
         logger.info('len(readgroup_dict_list={}'.format(len(readgroup_dict_list)))
@@ -103,13 +110,13 @@ def legacy_extract_readgroup_json(bam_path, logger):
         readgroup_dict['ID'] = 'default'
         readgroup_json_file = 'default.json'
         with open(readgroup_json_file, 'w') as f:
-            json.dump(readgroup_dict, f, ensure_ascii=False)            
+            json.dump(readgroup_dict, f, ensure_ascii=False)
     else:
         for readgroup_dict in readgroup_dict_list:
             logger.info('readgroup_dict=%s' % readgroup_dict)
             # legacy_check_readgroup(readgroup_dict, logger)
             readgroup_json_file = readgroup_dict['ID'] + '.json'
-            readgroup_json_file = readgroup_json_file.replace('+','')
+            readgroup_json_file = readgroup_json_file.replace('+', '')
             logger.info('readgroup_json_file=%s\n' % readgroup_json_file)
             with open(readgroup_json_file, 'w') as f:
                 json.dump(readgroup_dict, f, ensure_ascii=False)
@@ -127,31 +134,31 @@ def setup_logging(args):
     logger = logging.getLogger(__name__)
     return logger
 
+
 def main():
     parser = argparse.ArgumentParser('convert readgroups to json')
 
     # Logging flags.
-    parser.add_argument('-d', '--debug',
-        action = 'store_const',
-        const = logging.DEBUG,
-        dest = 'level',
-        help = 'Enable debug logging.',
+    parser.add_argument(
+        '-d',
+        '--debug',
+        action='store_const',
+        const=logging.DEBUG,
+        dest='level',
+        help='Enable debug logging.',
     )
-    parser.set_defaults(level = logging.INFO)
+    parser.set_defaults(level=logging.INFO)
 
     # Required flags.
-    parser.add_argument('-b', '--bam_path',
-                        required = True,
-                        help = 'BAM file.'
-    )
-    parser.add_argument('-m', '--mode',
-                        required = True,
+    parser.add_argument('-b', '--bam_path', required=True, help='BAM file.')
+    parser.add_argument(
+        '-m', '--mode', required=True,
     )
 
     args = parser.parse_args()
     bam_path = args.bam_path
-    mode = args.mode                        
-    
+    mode = args.mode
+
     logger = setup_logging(args)
 
     if mode == 'strict':
@@ -159,6 +166,7 @@ def main():
     elif mode == 'lenient':
         legacy_extract_readgroup_json(bam_path, logger)
     return
+
 
 if __name__ == '__main__':
     main()
