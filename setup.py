@@ -221,9 +221,6 @@ setup(
         "print_version": PrintVersion,
     },
     scripts=[os.path.join(os.path.dirname(__file__), 'bin', PACKAGE)],
-    entry_points={
-        'console_scripts': ['bam_readgroup_to_json=bam_readgroup_to_json.__main__:main']
-    },
 )
 
 # __END__
