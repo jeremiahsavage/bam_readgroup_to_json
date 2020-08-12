@@ -10,22 +10,22 @@ import pysam
 
 
 def check_readgroup(readgroup_dict, logger):
-    if not 'CN' in readgroup_dict:
+    if 'CN' not in readgroup_dict:
         logger.info('"CN" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
-    if not 'ID' in readgroup_dict:
+    if 'ID' not in readgroup_dict:
         logger.info('"ID" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
-    if not 'LB' in readgroup_dict:
+    if 'LB' not in readgroup_dict:
         logger.info('"LB" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
-    if not 'PL' in readgroup_dict:
+    if 'PL' not in readgroup_dict:
         logger.info('"PL" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
-    if not 'PU' in readgroup_dict:
+    if 'PU' not in readgroup_dict:
         logger.info('"PU" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
-    if not 'SM' in readgroup_dict:
+    if 'SM' not in readgroup_dict:
         logger.info('"SM" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
     # if not 'DT' in readgroup_dict
@@ -33,19 +33,19 @@ def check_readgroup(readgroup_dict, logger):
 
 
 def legacy_check_readgroup(readgroup_dict, logger):
-    if not 'CN' in readgroup_dict:
+    if 'CN' not in readgroup_dict:
         logger.info('"CN" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
-    if not 'ID' in readgroup_dict:
+    if 'ID' not in readgroup_dict:
         logger.info('"ID" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
-    if not 'LB' in readgroup_dict:
+    if 'LB' not in readgroup_dict:
         logger.info('"LB" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
-    if not 'PL' in readgroup_dict:
+    if 'PL' not in readgroup_dict:
         logger.info('"PL" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
-    if not 'SM' in readgroup_dict:
+    if 'SM' not in readgroup_dict:
         logger.info('"SM" is missing from readgroup: %s' % readgroup_dict)
         sys.exit(1)
     # if not 'DT' in readgroup_dict
@@ -53,7 +53,6 @@ def legacy_check_readgroup(readgroup_dict, logger):
 
 
 def extract_readgroup_json(bam_path, logger):
-    step_dir = os.getcwd()
     bam_file = os.path.basename(bam_path)
     bam_name, bam_ext = os.path.splitext(bam_file)
     samfile = pysam.AlignmentFile(bam_path, 'rb', check_sq=False)
@@ -94,7 +93,6 @@ def header_rg_list_to_rg_dicts(header_rg_list):
 
 
 def legacy_extract_readgroup_json(bam_path, logger):
-    step_dir = os.getcwd()
     bam_file = os.path.basename(bam_path)
     bam_name, bam_ext = os.path.splitext(bam_file)
     samfile = pysam.AlignmentFile(bam_path, 'rb', check_sq=False)
