@@ -1,0 +1,9 @@
+pysam
+sqlalchemy
+detect-secrets==0.13.1
+flake8
+isort
+mock
+pre-commit
+pytest
+pytest-cov
