@@ -1,1 +1,6 @@
-../bam_readgroup_to_json/main.py
+#!/bin/sh
+
+case "$1" in
+	test) python -m pytest tests;;
+	*) python -m bam_readgroup_to_json $@;;
+esac
