@@ -1,125 +1,55 @@
 #!/usr/bin/env python
+"""Outputs readgroup header, as JSON, from given BAM.
+"""
 
 import argparse
+import collections
 import json
 import logging
 import os
 import sys
+from types import SimpleNamespace
 
 import pysam
 
-def check_readgroup(readgroup_dict, logger):
-    if not 'CN' in readgroup_dict:
-        logger.info('"CN" is missing from readgroup: %s' % readgroup_dict)
-        sys.exit(1)
-    if not 'ID' in readgroup_dict:
-        logger.info('"ID" is missing from readgroup: %s' % readgroup_dict)
-        sys.exit(1)
-    if not 'LB' in readgroup_dict:
-        logger.info('"LB" is missing from readgroup: %s' % readgroup_dict)
-        sys.exit(1)
-    if not 'PL' in readgroup_dict:
-        logger.info('"PL" is missing from readgroup: %s' % readgroup_dict)
-        sys.exit(1)
-    if not 'PU' in readgroup_dict:
-        logger.info('"PU" is missing from readgroup: %s' % readgroup_dict)
-        sys.exit(1)
-    if not 'SM' in readgroup_dict:
-        logger.info('"SM" is missing from readgroup: %s' % readgroup_dict)
-        sys.exit(1)
-    # if not 'DT' in readgroup_dict
-    return
+from bam_readgroup_to_json import extract, legacy, utils
 
-def legacy_check_readgroup(readgroup_dict, logger):
-    if not 'CN' in readgroup_dict:
-        logger.info('"CN" is missing from readgroup: %s' % readgroup_dict)
-        sys.exit(1)
-    if not 'ID' in readgroup_dict:
-        logger.info('"ID" is missing from readgroup: %s' % readgroup_dict)
-        sys.exit(1)
-    if not 'LB' in readgroup_dict:
-        logger.info('"LB" is missing from readgroup: %s' % readgroup_dict)
-        sys.exit(1)
-    if not 'PL' in readgroup_dict:
-        logger.info('"PL" is missing from readgroup: %s' % readgroup_dict)
-        sys.exit(1)
-    if not 'SM' in readgroup_dict:
-        logger.info('"SM" is missing from readgroup: %s' % readgroup_dict)
-        sys.exit(1)
-    # if not 'DT' in readgroup_dict
-    return
-
-def extract_readgroup_json(bam_path, logger):
-    step_dir = os.getcwd()
-    bam_file = os.path.basename(bam_path)
-    bam_name, bam_ext = os.path.splitext(bam_file)
-    samfile = pysam.AlignmentFile(bam_path, 'rb', check_sq=False)
-    samfile_header = samfile.header
-    readgroup_dict_list = samfile_header['RG']
-    if len(readgroup_dict_list) < 1:
-        logger.debug('There are no readgroups in BAM: %s' % bam_name)
-        logger.debug('\treadgroup: %s' % readgroup_dict_list)
-        sys.exit(1)
-    else:
-        for readgroup_dict in readgroup_dict_list:
-            logger.info('readgroup_dict=%s' % readgroup_dict)
-            check_readgroup(readgroup_dict, logger)
-            readgroup_json_file = readgroup_dict['ID'] + '.json'
-            readgroup_json_file = readgroup_json_file.replace('+','')
-            logger.info('readgroup_json_file=%s\n' % readgroup_json_file)
-            with open(readgroup_json_file, 'w') as f:
-                json.dump(readgroup_dict, f, ensure_ascii=False)
-    return
+logger = logging.getLogger(__name__)
 
 
-def header_rg_list_to_rg_dicts(header_rg_list):
-    readgroups_list = list()
-    for rg_list in header_rg_list:
-        keys_values = rg_list.lstrip('@RG').lstrip('\t').lstrip('@SQ').lstrip('\t').split('\t')
-        readgroup = dict()
-        for key_value in keys_values:
-            key_value_split = key_value.split(':')
-            a_key = key_value_split[0]
-            a_value = key_value_split[1]
-            readgroup[a_key] = a_value
-        if 'PL' not in readgroup.keys():
-            readgroup['PL'] = 'ILLUMINA'
-        readgroups_list.append(readgroup)
-    return readgroups_list
+def setup_logger(args):
+    logging.basicConfig(
+        filename=args.log_file,
+        level=args.log_level,
+        filemode='w',
+        format='%(asctime)s %(name)s:%(lineno)s %(levelname)s | %(message)s',
+        datefmt='%Y-%m-%d_%H:%M:%S_%Z',
+    )
 
 
-def legacy_extract_readgroup_json(bam_path, logger):
-    step_dir = os.getcwd()
-    bam_file = os.path.basename(bam_path)
-    bam_name, bam_ext = os.path.splitext(bam_file)
-    samfile = pysam.AlignmentFile(bam_path, 'rb', check_sq=False)
-    samfile_header = samfile.text
-    header_list = samfile_header.split('\n')
-    header_rg_list = [ header_line for header_line in header_list if header_line.startswith('@RG') ]
-    readgroup_dict_list = header_rg_list_to_rg_dicts(header_rg_list)
-    if len(readgroup_dict_list) == 0:
-        logger.info('len(readgroup_dict_list={}'.format(len(readgroup_dict_list)))
-        readgroup_dict = dict()
-        readgroup_dict['ID'] = 'default'
-        readgroup_json_file = 'default.json'
-        with open(readgroup_json_file, 'w') as f:
-            json.dump(readgroup_dict, f, ensure_ascii=False)            
-    else:
-        for readgroup_dict in readgroup_dict_list:
-            logger.info('readgroup_dict=%s' % readgroup_dict)
-            # legacy_check_readgroup(readgroup_dict, logger)
-            readgroup_json_file = readgroup_dict['ID'] + '.json'
-            readgroup_json_file = readgroup_json_file.replace('+','')
-            logger.info('readgroup_json_file=%s\n' % readgroup_json_file)
-            with open(readgroup_json_file, 'w') as f:
-                json.dump(readgroup_dict, f, ensure_ascii=False)
-    return
+DI = SimpleNamespace(json=json, open=open, os=os, pysam=pysam,)
+
+READGROUP_REQUIRES = (
+    'CN',
+    'ID',
+    'LB',
+    'PL',
+    'PU',
+    'SM',
+)
+LEGACY_READGROUP_REQUIRES = (
+    'CN',
+    'ID',
+    'LB',
+    'PL',
+    'SM',
+)
 
 
-def setup_logging(args):
+def setup_logging(level=logging.INFO):
     logging.basicConfig(
         filename=os.path.join('output.log'),
-        level=args.level,
+        level=level,
         filemode='w',
         format='%(asctime)s %(levelname)s %(message)s',
         datefmt='%Y-%m-%d_%H:%M:%S_%Z',
@@ -127,38 +57,96 @@ def setup_logging(args):
     logger = logging.getLogger(__name__)
     return logger
 
-def main():
+
+def parse_args(argv=None):
+
+    parser = setup_parser()
+    if argv:
+        args, unknown_args = parser.parse_known_args(argv)
+    else:
+        args, unknown_args = parser.parse_known_args()
+
+    args_dict = vars(args)
+
+    args_dict['extras'] = unknown_args
+
+    run_args = collections.namedtuple('RunArgs', list(args_dict.keys()))
+    return run_args(**args_dict)
+
+
+def setup_parser() -> argparse.ArgumentParser:
+
     parser = argparse.ArgumentParser('convert readgroups to json')
 
     # Logging flags.
-    parser.add_argument('-d', '--debug',
-        action = 'store_const',
-        const = logging.DEBUG,
-        dest = 'level',
-        help = 'Enable debug logging.',
+    parser.add_argument(
+        '-d',
+        '--debug',
+        action='store_const',
+        const=logging.DEBUG,
+        dest='level',
+        help='Enable debug logging.',
     )
-    parser.set_defaults(level = logging.INFO)
+    parser.set_defaults(level=logging.INFO)
 
     # Required flags.
-    parser.add_argument('-b', '--bam_path',
-                        required = True,
-                        help = 'BAM file.'
+    parser.add_argument('-b', '--bam-path', required=True, help='BAM file.')
+    parser.add_argument(
+        '-m', '--mode', required=True, choices=('strict', 'lenient'),
     )
-    parser.add_argument('-m', '--mode',
-                        required = True,
+    return parser
+
+
+def run(args):
+
+    mode = args.mode
+    bam_path = args.bam_path
+
+    if mode == 'strict':
+        extract.extract_readgroup_json(bam_path)
+    elif mode == 'lenient':
+        legacy.extract_readgroup_json(bam_path)
+
+    return
+
+
+def main() -> int:
+    retcode = 0
+    parser = argparse.ArgumentParser('convert readgroups to json')
+
+    # Logging flags.
+    parser.add_argument(
+        '-d',
+        '--debug',
+        action='store_const',
+        const=logging.DEBUG,
+        dest='level',
+        help='Enable debug logging.',
+    )
+    parser.set_defaults(level=logging.INFO)
+
+    # Required flags.
+    parser.add_argument('-b', '--bam-path', required=True, help='BAM file.')
+    parser.add_argument(
+        '-m', '--mode', required=True, choices=('strict', 'lenient'),
     )
 
     args = parser.parse_args()
-    bam_path = args.bam_path
-    mode = args.mode                        
-    
-    logger = setup_logging(args)
 
-    if mode == 'strict':
-        extract_readgroup_json(bam_path, logger)
-    elif mode == 'lenient':
-        legacy_extract_readgroup_json(bam_path, logger)
-    return
+    try:
+        run(args)
+    except Exception as e:
+        logger.exception(e)
+        retcode = 1
+    return retcode
+
 
 if __name__ == '__main__':
-    main()
+
+    exit_code = 0
+    try:
+        exit_code = main()
+    except Exception as e:
+        logger.exception(e)
+        exit_code = 1
+    sys.exit(exit_code)
