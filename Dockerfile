@@ -1,30 +1,21 @@
-FROM ubuntu:bionic-20180426
+FROM quay.io/ncigdc/python38-builder as builder
 
-MAINTAINER Jeremiah H. Savage <jeremiahsavage@gmail.com>
+COPY ./ /opt
 
-ENV version 0.26
+WORKDIR /opt
 
-RUN apt-get update \
-    && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get install -y \
-        cython \
-        libbz2-1.0 \
-        libbz2-dev \
-        liblzma5 \
-        liblzma-dev \
-        make \
-        python3-pandas \
-        python3-pip \
-        python3-sqlalchemy \
-        zlib1g \
-        zlib1g-dev \
-    && apt-get clean \
-    && pip3 install bam_readgroup_to_json \
-    && apt-get remove --purge -y \
-        cython \
-        libbz2-dev \
-        liblzma-dev \
-        make \
-        zlib1g-dev \
-    && apt autoremove -y \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.cache
+RUN pip install tox && tox -p
+
+FROM quay.io/ncigdc/python38
+
+COPY --from=builder /opt/dist/*.tar.gz /opt
+COPY requirements.txt /opt
+
+WORKDIR /opt
+
+RUN pip install -r requirements.txt *.tar.gz \
+	&& rm -f *.tar.gz requirements.txt
+
+ENTRYPOINT ["python_project"]
+
+CMD ["--help"]
