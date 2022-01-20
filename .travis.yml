@@ -1,20 +1,19 @@
 language: python
 python:
 - '3.6'
-
 services: docker
-
 git:
   depth: false
-
 install: make docker-login build-docker
-
 stages:
 - name: publish-docker
-
 jobs:
   include:
   - stage: publish
     name: Publish docker image
     script:
     - make docker-login publish-docker
+env:
+  global:
+  - secure: mvsFGgvTiuKbLQobe9S3x8BvbI6e1Fwhe9Is5iM+cat2s8N6yQiScyeT1brRYM2WvKCbYJ5kbQree42CLx/8JfRDRvfxwcqD9JiTB6hAy8j7ztwmHZciooB4OtO5Bdc4chfErpBglh2Df190fNdHKaM9Fd1buQRTdwWseqo3M8tJOO2w0rd935DfzYpq0QH4tQgV7RG8rUiE6uGqr1Zih9QblnhBnuSjhLEVnUH3pYaSNFZk6/OaeNQT58A2ggZ6aZ0IvMIdFugCzC6DfR8eFVsOuDAIEY/YxDE0oQGHUVPQha2xXDULSBGRLoV7/VPDSZV0V/ATFFrZ791WrJMTeCCYzro587aPAbIaawkYkA6ljJdYawe49+zoWk2JWnI7Sg66x3jvjEEEbWPowjO4u9BDAC3Lpj5J+T2CmPBWE6tVNryiUeFCFUxWcJXzGnxT1uKLsGjKGKg/1990YwsX0AeEvK/idg5M0z7OuoSwAIDmAQq7zWS+ry6JTBw5D3UgKZqAZj0u/Mxy6kvvtP+gKqmQlMR8oOtMKGPmoDBBzNGrnExUfMaVTGmPKZ/TPeh67WE1UdLdUq7CxWhQogJxwKWXBQ2exr6MFpcJrnFFKLd+nZ9LaJOb4KgiVRrK/zhLwoS/pu8m2+YWYZ93XpVXGO6xkkqGhGu0nAHgJBP/6zA=
+  - secure: xHKkILSa1Mk3w45SGnySGLhV1yobfW+g2AYzHvvfXtChaWb/09Ve2swReIeR/91h6nkCvTOYmvuKsdLJzbvx9AmRleYwQlUegRwu5nCxCI79TA+IgRPd4wLiSOD161bx7hOL+QbOR5KcytzhSRXcqWF9ijGXPPJIH9GWvalK2r4XoKK8ZA5ME2KZyFcPaR4B8OHVXiBDZy5+rj8G4VK8OBEeQ+xgrlJGgNdWzqrwTkofRPNiqjFGUXf4mxkKh3Af+n1vjxL6t2c5LwyZ/UwSnfIBlSJzmms4uQFb8+iRLDC1/wVIa1aM8nGjs2tS0VZjyNjZbKQ+miVu07JVvaeZfTPzEJrrOGBu7maS9LICSwfkWahh6ZlSsRtFeDU9pRLOfZyGGGQfsInvmUgdXwPX5GUl7f2obCjATDDmsILlBmmLjWC6dMsTZXUY+902b5nyo4nrwth1fsmcba5rGghh5h2Dyxgr2HIJirAlGLsJJbS6VSpgaNq5+pvIizL3/QPx6NcaDDORIiqLpL5zsNQ5AzvjwbwCenusALfGSv5MzwBlqXQuR6Mm0xAkoZzvnmjH+kkYAFlaKJgEaCxleUdD0d+r6WsPmivkGjPlIGUgdQ+SYCC+XseOS7jaIt0XqyslRvWd5rs/4Lbek+H067SPzwjg+jmsXm+gyBUcDJ7yQm4=
