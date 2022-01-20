@@ -16,6 +16,6 @@ WORKDIR /opt
 RUN pip install -r requirements.txt *.tar.gz \
 	&& rm -f *.tar.gz requirements.txt
 
-ENTRYPOINT ["python_project"]
+ENTRYPOINT ["bam_readgroup_to_json"]
 
 CMD ["--help"]
