@@ -11,7 +11,7 @@ jobs:
   - stage: test
     name: Test run help
     script:
-    - make docker-run
+    - make run-docker
   - stage: publish
     name: Publish docker image
     script:
