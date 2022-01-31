@@ -79,6 +79,14 @@ build-pypi: clean
 	@echo
 	tox -e check_dist
 
+.PHONY: run run-*
+run:
+	@echo
+
+run-docker:
+	@echo
+	docker run --rm "${DOCKER_IMAGE_COMMIT}"
+
 .PHONY: lint test test-* tox
 test: tox
 lint:
