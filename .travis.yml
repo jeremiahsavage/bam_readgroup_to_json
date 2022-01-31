@@ -1,14 +1,17 @@
-language: python
-python:
-- '3.6'
 services: docker
 git:
   depth: false
+
 install: make docker-login build-docker
 stages:
+- name: test
 - name: publish-docker
 jobs:
   include:
+  - stage: test
+    name: Test run help
+    script:
+    - make docker-run
   - stage: publish
     name: Publish docker image
     script:
